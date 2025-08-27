@@ -134,7 +134,7 @@ def regiter_attention_editor_diffusers(model, editor: AttentionBase):
         return count
 
     cross_att_count = 0
-    for net_name, net in model.moduleunet.named_children():
+    for net_name, net in model.unet.named_children():
         if "down" in net_name:
             cross_att_count += register_editor(net, 0, "down")
         elif "mid" in net_name:
@@ -202,7 +202,7 @@ def regiter_attention_editor_ldm(model, editor: AttentionBase):
         return count
 
     cross_att_count = 0
-    for net_name, net in model.modulemodel.modulediffusion_model.modulenamed_children():
+    for net_name, net in model.model.diffusion_model.named_children():
         if "input" in net_name:
             cross_att_count += register_editor(net, 0, "input")
         elif "middle" in net_name:
