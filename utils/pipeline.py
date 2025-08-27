@@ -124,11 +124,16 @@ class MasaCtrlPipeline(StableDiffusionPipeline):
         text_input = self.tokenizer(
             prompt,
             padding="max_length",
-            max_length=77,
+            max_length=self.tokenizer.model_max_length,
+            truncation=True,
             return_tensors="pt"
-        )
+        ).to(DEVICE)  # <<< move everything to GPU
 
-        text_embeddings = self.text_encoder(text_input.input_ids.to(DEVICE))[0]
+        text_embeddings = self.text_encoder(
+            text_input.input_ids,
+            attention_mask=text_input.attention_mask
+        )[0]
+
         print("input text embeddings :", text_embeddings.shape)
         # if kwds.get("dir"):
         #     dir = text_embeddings[-2] - text_embeddings[-1]
